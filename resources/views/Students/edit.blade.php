@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Edit Student</title>
+    <title>{{ __('messages.edit_student') }}</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
-<h1>Edit Student</h1>
+<h1>{{ __('messages.edit_student') }}</h1>
 
 @if($student)
 <form action="{{ route('students.update', $student->id) }}" method="POST">
@@ -14,31 +14,31 @@
     @method('PUT')
     
     <div>
-        <label for="name">Name:</label>
+        <label for="name">{{ __('messages.name') }}</label>
         <input type="text" name="name" value="{{ old('name', $student->name) }}" required>
     </div>
 
     <div>
-        <label for="year">Choose a year:</label>
-        <select id="year" name="year" required>
-            <option value="">Select Year</option>
-            <option value="2024" {{ $student->year == 2024 ? 'selected' : '' }}>2024</option>
-            <option value="2023" {{ $student->year == 2023 ? 'selected' : '' }}>2023</option>
-            <option value="2022" {{ $student->year == 2022 ? 'selected' : '' }}>2022</option>
-        </select>
-    </div>
+    <label for="year">{{ __('messages.select_year') }}</label>
+    <select id="year" name="year" required>
+        <option value="">{{ __('messages.select_year') }}</option>
+        @foreach($years as $year)  <!-- Frissített változó -->
+            <option value="{{ $year }}" {{ $student->year == $year ? 'selected' : '' }}>{{ $year }}</option>
+        @endforeach
+    </select>
+</div
 
     <div>
-        <label for="class">Choose a class:</label>
+        <label for="class">{{ __('messages.select_class') }}</label>
         <select id="class" name="class_id" required>
-            <option value="">Select Class</option>
+            <option value="">{{ __('messages.select_class') }}</option>
             @foreach($classes as $class)
                 <option value="{{ $class->id }}" {{ $student->class_id == $class->id ? 'selected' : '' }}>{{ $class->name }}</option>
             @endforeach
         </select>
     </div>
 
-    <button type="submit">Update Student</button>
+    <button type="submit">{{ __('messages.update_student') }}</button>
 </form>
 @else
     <p>Student not found.</p>
@@ -46,7 +46,6 @@
 
 <script>
 $(document).ready(function() {
-    // Lehet, hogy a class mezőn nem kell dinamikusan frissíteni, ha már van adat
     $('#year').change(function() {
         var year = $(this).val();
         if (year) {

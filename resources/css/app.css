@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.badge {
+    font-size: 0.9rem;
+    margin-right: 0.3rem;
+    min-width: 2rem;
+    display: inline-block;
+    text-align: center;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+.card-header h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0;
+}

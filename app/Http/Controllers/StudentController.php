@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Student; 
 use App\Models\SchoolClass; 
 
-
 class StudentController extends Controller
 {
     /**
@@ -14,8 +13,16 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students = Student::all(); // Lekérdezi az összes diákot
-        return view('students.index', compact('students')); // Visszaadja a megfelelő nézetet
+        $students = Student::all();
+        $years = SchoolClass::select('year')->distinct()->orderBy('year', 'desc')->pluck('year');
+        
+        return view('students.index', compact('students', 'years'));
+    }
+
+    public function studentsPage()
+    {
+        $years = SchoolClass::select('year')->distinct()->orderBy('year', 'desc')->pluck('year');
+        return view('students', compact('years'));
     }
 
     /**
@@ -23,8 +30,8 @@ class StudentController extends Controller
      */
     public function create()
     {
-        $classes = SchoolClass::all(); // Lekérdezi az összes osztályt
-        return view('students.create', compact('classes')); // Átadja az osztályokat a nézetnek
+        $classes = SchoolClass::all();
+        return view('students.create', compact('classes'));
     }
 
     /**
@@ -52,7 +59,7 @@ class StudentController extends Controller
      */
     public function show(string $id)
     {
-        $student = Student::findOrFail($id); // Használj findOrFail() a hibás ID kezeléséhez
+        $student = Student::findOrFail($id);
         return view('students.show', compact('student'));
     }
 
@@ -61,10 +68,11 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        $student = Student::findOrFail($id);
-        $classes = SchoolClass::all();
-        dd($student, $classes); // Ellenőrizd, hogy a változók helyesek-e
-        return view('students.edit', compact('student', 'classes'));
+        $student = Student::findOrFail($id); // 404 hiba, ha nem található
+        $years = SchoolClass::select('year')->distinct()->pluck('year'); // Évek beszerzése
+        $classes = SchoolClass::all(); // Minden osztály beszerzése
+
+        return view('students.edit', compact('student', 'years', 'classes')); // Az évek és osztályok átadása
     }
 
     public function update(Request $request, $id)
@@ -84,28 +92,32 @@ class StudentController extends Controller
 
         return redirect()->route('students.index')->with('success', 'Student updated successfully.');
     }
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        $student = Student::findOrFail($id); // Diák keresése
-        $student->delete(); // Diák törlése
+        try {
+            $student = Student::findOrFail($id);
+            $student->delete();
 
-        return redirect()->route('students.index')->with('success', 'Student deleted successfully.'); // Visszairányít
+            return redirect()->route('students.index')->with('success', 'Student deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('students.index')->with('error', 'Error deleting student.');
+        }
     }
 
     public function getClasses($year)
     {
-        // Feltételezve, hogy az osztályok tartalmaznak egy 'year' mezőt
-        $classes = SchoolClass::where('year', $year)->get(); // Változtasd meg a lekérdezést, ha a mező neve más
+        $classes = SchoolClass::where('year', $year)->get();
         return response()->json($classes);
     }
 
     public function getStudentsByClass($classId)
-{
-    $students = Student::where('class_id', $classId)->get(); // Feltételezve, hogy van 'class_id' mező a Student modellben
-    return response()->json($students);
-}
-
+    {
+        $students = Student::where('class_id', $classId)->get();
+        return response()->json($students);
+    }
+    
 }

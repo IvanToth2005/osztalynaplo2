@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 class Mark extends Model
 {
-    protected $fillable = ['subject_id', 'student_id', 'marks', 'date'];
+    use HasFactory;
+    public $timestamps = false;
+
+    protected $fillable = ['subject_id', 'student_id', 'mark', 'date'];
 
     public function student()
     {

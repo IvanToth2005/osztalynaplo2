@@ -19,8 +19,20 @@ class Student extends Model
         'sex',
     ];
 
-    public function schoolClass()
+    public function marks()
     {
-        return $this->belongsTo(SchoolClass::class, 'class_id');
+        return $this->hasMany(Mark::class);
     }
+
+    public function getAverageAttribute()
+    {
+        return $this->marks->avg('mark');
+    }
+    public function marksForSubject($subjectId)
+    {
+        return $this->hasMany(Mark::class)->where('subject_id', $subjectId);
+    }
+    protected $attributes = [
+        'sex' => 'M', 
+    ];
 }

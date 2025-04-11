@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\SchoolClass;
 
+
 class SchoolClassController extends Controller
 {
     /**
@@ -13,7 +14,7 @@ class SchoolClassController extends Controller
     public function index()
     {
         $classes = SchoolClass::all();
-        return view('schoolClass.index', compact('classes'));
+        return view('SchoolClass.index', compact('classes'));
     }
 
     /**
@@ -21,7 +22,7 @@ class SchoolClassController extends Controller
      */
     public function create()
     {
-        return view('schoolClass.create'); // Kicsi betűs nézetnév
+        return view('SchoolClass.create'); // Kicsi betűs nézetnév
     }
 
     /**
@@ -29,23 +30,23 @@ class SchoolClassController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'year' => 'required|integer',
+            'year' => 'required|numeric'
         ]);
-
-        SchoolClass::create($request->all());
-
-        return redirect()->route('schoolClass.index')->with('success', 'Class created successfully.');
+    
+        $class = SchoolClass::create($validated);
+    
+        return redirect()->route('school-class.index')
+            ->with('success', 'Class created successfully.');
     }
-
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
         $class = SchoolClass::findOrFail($id);
-        return view('schoolClass.show', compact('class')); // Kicsi betűs nézetnév
+        return view('SchoolClass.show', compact('class')); // Kicsi betűs nézetnév
     }
 
     /**
@@ -54,7 +55,7 @@ class SchoolClassController extends Controller
     public function edit(string $id)
     {
         $class = SchoolClass::findOrFail($id);
-        return view('schoolClass.edit', compact('class')); // Kicsi betűs nézetnév
+        return view('SchoolClass.edit', compact('class')); // Kicsi betűs nézetnév
     }
 
     /**
@@ -70,7 +71,7 @@ class SchoolClassController extends Controller
         $class = SchoolClass::findOrFail($id);
         $class->update($request->all());
 
-        return redirect()->route('schoolClass.index')->with('success', 'Class updated successfully.');
+        return redirect()->route('school-class.index')->with('success', 'Class updated successfully.');
     }
 
     /**
@@ -81,7 +82,7 @@ class SchoolClassController extends Controller
         $class = SchoolClass::findOrFail($id);
         $class->delete();
 
-        return redirect()->route('schoolClass.index')->with('success', 'Class deleted successfully.');
+        return redirect()->route('school-class.index')->with('success', 'Class deleted successfully.');
     }
 
     

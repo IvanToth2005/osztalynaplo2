@@ -12,15 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('marks', function (Blueprint $table) {
-            $table->id();         
+            $table->id();
             $table->unsignedBigInteger("subject_id");
-            $table->foreign("subject_id")->references("id")->on("subjects");
+            $table->foreign("subject_id")->references("id")->on("subjects")->onDelete('cascade');
             $table->unsignedBigInteger("student_id");
-            $table->foreign("student_id")->references("id")->on("students");
-            $table->string("marks");
+            $table->foreign("student_id")->references("id")->on("students")->onDelete('cascade');
+            $table->tinyInteger("mark")->unsigned(); // 1-5-ös jegyek
             $table->date("date");
-            
-
+            $table->timestamps(); // created_at és updated_at mezők
         });
     }
 

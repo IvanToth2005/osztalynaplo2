@@ -2,18 +2,16 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Support\Facades\DB;
+use App\Models\Subject;
+use App\Models\SchoolClass;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class SubjectSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        DB::table('subjects')->insert([
+        // Tantárgyak létrehozása
+        $subjects = [
             ['name' => 'Mathematics'],
             ['name' => 'Physics'],
             ['name' => 'Chemistry'],
@@ -22,6 +20,23 @@ class SubjectSeeder extends Seeder
             ['name' => 'Geography'],
             ['name' => 'English'],
             ['name' => 'Computer Science'],
-        ]);
+        ];
+
+        // Tantárgyak létrehozása (ha még nem léteznek)
+        foreach ($subjects as $subject) {
+            Subject::firstOrCreate($subject);
+        }
+
+        // Minden osztály kapcsolatainak törlése
+        SchoolClass::each(function ($class) {
+            $class->subjects()->detach();
+        });
+
+        // Új kapcsolatok létrehozása
+        $subjectIds = Subject::pluck('id')->toArray();
+        
+        SchoolClass::each(function ($class) use ($subjectIds) {
+            $class->subjects()->sync($subjectIds);
+        });
     }
 }

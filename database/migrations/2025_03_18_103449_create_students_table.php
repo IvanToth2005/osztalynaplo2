@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->unsignedBigInteger("class_id");
-            $table->foreign("class_id")->references("id")->on("school_classes");
-            $table->string("sex");
-
+            $table->foreign("class_id")
+                  ->references("id")
+                  ->on("school_classes")
+                  ->onDelete('cascade'); 
+            $table->string("sex")->nullable();
         });
     }
 

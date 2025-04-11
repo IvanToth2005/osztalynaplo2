@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
+            $table->string("name")->unique(); // Egyedi név
+            $table->timestamps(); // created_at és updated_at mezők
         });
     }
 
