@@ -36,8 +36,8 @@
 
 
 <script>
-    const getClassesUrl = "{{ route('subjects.get-classes', '') }}";
-    const getSubjectsUrl = "{{ route('subjects.get-subjects', '') }}";
+    const getClassesBaseUrl = "{{ url('subjects/get-classes') }}";
+    const getSubjectsBaseUrl = "{{ url('subjects/get-subjects') }}";
     const showResultsUrl = "{{ route('subjects.show-results') }}";
     const csrfToken = "{{ csrf_token() }}";  
 </script>

@@ -5,8 +5,10 @@
 
 <div>
     @include('success')
+    @if(auth()->check())
 
     <a href="{{ route('school-class.create') }}" title="Új">{{ __('messages.new_class') }}</a>
+    @endif
 
     @foreach($classes as $class)
         <div class="row {{ $loop->iteration % 2 == 0 ? 'even' : 'odd' }}">
